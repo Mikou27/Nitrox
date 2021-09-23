@@ -201,12 +201,7 @@ namespace NitroxLauncher
 
         internal async Task StartSingleplayerAsync()
         {
-#if RELEASE
-            if (Process.GetProcessesByName("Subnautica").Length > 0)
-            {
-                throw new Exception("An instance of Subnautica is already running");
-            }
-#endif
+
             nitroxEntryPatch.Remove();
             gameProcess = StartSubnautica() ?? await WaitForProcessAsync();
         }
@@ -218,12 +213,7 @@ namespace NitroxLauncher
                 NavigateTo<OptionPage>();
                 throw new Exception("Location of Subnautica is unknown. Set the path to it in settings.");
             }
-#if RELEASE
-            if (Process.GetProcessesByName("Subnautica").Length > 0)
-            {
-                throw new Exception("An instance of Subnautica is already running");
-            }
-#endif
+
             // Store path where launcher is in AppData for Nitrox bootstrapper to read
             string nitroxAppData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox");
             Directory.CreateDirectory(nitroxAppData);
@@ -328,12 +318,12 @@ namespace NitroxLauncher
 
             switch (PlatformDetection.GetPlatform(SubnauticaPath))
             {
-                case Platform.EPIC:
-                    startInfo.Arguments = "-EpicPortal -vrmode none";
+                 case Platform.EPIC:
+                    startInfo.Arguments = "-EpicPortal -screen-fullscreen 0 -popupwindow -vrmode none";
                     break;
 
                 case Platform.STEAM:
-                    startInfo.FileName = "steam://run/264710";
+                    startInfo.Arguments = "-screen-fullscreen 0 -popupwindow -vrmode none";
                     break;
 
                 case Platform.MICROSOFT:
